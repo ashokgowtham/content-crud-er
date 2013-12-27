@@ -1,0 +1,7 @@
+{
+	"main":"index.html",
+	"name":"cms",
+	"window":{
+		"toolbar":true
+	}
+}
