@@ -2,11 +2,17 @@
 	"name":"cms-server",
     "version": "0.0.1",
 	"main":"main-server.js",
+	"description":"Simple server written in nodejs to host a set of files for querying and download",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/ashokgowtham/content-crud-er.git"
+	},
 	"dependencies": {
 		"express": "~3.4.0",
 		"underscore":"~1.5.0",
 		"findit":"~1.1.0",
-		"fileupload":"", // https://github.com/domharrington/fileupload
+		"fileupload":"repo is here: https://github.com/domharrington/fileupload",
+		"fileupload":"",
 		"mongodb" : "",
 		"mkdirp": "",
 		"passport":"~0.1.17",
