@@ -87,30 +87,54 @@ var category_structure = {
 	location: "sci_fi/finding_neo_2"
 };
 
-app.post('/category_structure/create.json', function(req, res) {
-	mongodb.connect('mongodb://localhost:27017/content_locator', function(err, db) {
-		console.log("DB connected successfully" + db);
-		var location = category_structure.location; // to be replaced by req.body
-		console.log("Here " + location);
-		db.collection('content_locations').find({'location': new RegExp(location, 'i') }).toArray(function(err, folders) {
-			if(folders != null && folders.length > 0) {
-				console.log(folders);
-				res.send(folders);
-				// res.status(409);
-			}
-			else {
-				db.collection('content_locations').insert(category_structure, function(err, contentLocation){
-					if(err){
-						console.log(err);
-						res.status(400);
-					}else{
-						res.send("Successfully created a content category structure");
-						// res.status(201);
-					}
-				});
-			}
-		});
-	});	
+// app.post('/category_structure/create.json', function(req, res) {
+// 	mongodb.connect('mongodb://localhost:27017/content_locator', function(err, db) {
+// 		console.log("DB connected successfully" + db);
+// 		var location = category_structure.location; // to be replaced by req.body
+// 		console.log("Here " + location);
+// 		db.collection('content_locations').find({'location': new RegExp(location, 'i') }).toArray(function(err, folders) {
+// 			if(folders != null && folders.length > 0) {
+// 				console.log(folders);
+// 				res.send(folders);
+// 				// res.status(409);
+// 			}
+// 			else {
+// 				db.collection('content_locations').insert(category_structure, function(err, contentLocation){
+// 					if(err){
+// 						console.log(err);
+// 						res.status(400);
+// 					}else{
+// 						res.send("Successfully created a content category structure");
+// 						// res.status(201);
+// 					}
+// 				});
+// 			}
+// 		});
+// 	});	
+// });
+
+app.get('/category_structure.json', function(req, res) {
+    var file = __dirname + '/contents.json';
+    fs.readFile(file,  function (err, data) {
+    if (err) {
+      console.log('Error: ' + err);
+    }
+    else {
+      var files = JSON.parse(data);
+      var result = files["fileStructures"]; 
+      if(result.indexOf(category_structure.location) > -1 )
+          res.send("Structure already created ; Ready to Upload");
+      else {
+      	  result = result.toString().split(",");
+      	  console.log("Here" + result);
+      	  result.push(category_structure.location);
+      	  console.log("Here  again! "+ result);
+      	  files["fileStructures"] = result;
+      	  fs.writeFile(file, JSON.stringify(files));
+          res.send("Beeeeh");        
+      }
+    } 
+   });
 });
 
 app.get('/',function(req, res){
