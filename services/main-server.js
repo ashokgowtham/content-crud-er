@@ -4,6 +4,7 @@ var express = require('express')
 , mkdirUtil = require('mkdirp')
 , flash = require('connect-flash')
 , findit = require('findit')
+, fs = require('fs')
 , passport = require('passport')
 , localStrategy = require('passport-local').Strategy;
 
@@ -178,26 +179,56 @@ app.get('/content/download',function (req, res) {
 
 var requestFile = {
 	content : {
-		path : "math/algebra",
-		subjectMatter : "contents/algebra_one.txt"
+		files: {
+			uploadContent: {
+			  path: "contents/algebra_one.txt"	
+			}, 
+			uploadPath : "math/algebra",
+			fileName: "session-1.txt"
+		}
+		
+
 	} 
 };
 
-app.post('/upload', function(req, res) {
-	var subjectMatter = requestFile.content.subjectMatter;
-	var promise = mkdirUtil("contents/" + requestFile.content.path, function(err){
-		if(err) {
-			console.log("Error creating Directory Structure");
-		} else {
-			var fileUploader = fileUpload.createFileUpload("contents/"+ requestFile.content.path);
-			fileUploader.put(subjectMatter,function(err, file){
-				if(err) {
-					console.log("Error captured during Upload Content " + err);
-				}
-				res.send(file);
-			});
-		}
-	});
-});
+// app.post('/upload', function(req, res) {
+// 	var subjectMatter = requestFile.content.subjectMatter;
+// 	var promise = mkdirUtil("contents/" + requestFile.content.path, function(err){
+// 		if(err) {
+// 			console.log("Error creating Directory Structure");
+// 		} else {
+// 			var fileUploader = fileUpload.createFileUpload("contents/"+ requestFile.content.path);
+// 			fileUploader.put(subjectMatter,function(err, file){
+// 				if(err) {
+// 					console.log("Error captured during Upload Content " + err);
+// 				}
+// 				res.send(file);
+// 			});
+// 		}
+// 	});
+// });
+
+ app.post('/upload', function(req, res){
+    /* Assuming File Upload request would be specified from a form which would have a field uploadContent */
+    fs.readFile(requestFile.content.files.uploadContent.path, function(err, data){
+    	if(err) {
+    		console.log("Error reading contents of file " + err);
+    	}
+    	else{
+        	var promise = mkdirUtil("contents/" + requestFile.content.files.uploadPath, function(err){
+            if(err) {
+        			console.log("Error creating Directory Structure");
+        	} 
+        	else {
+        		    fileLocation=  __dirname+ "/contents/" + requestFile.content.files.uploadPath + "/" + requestFile.content.files.fileName
+                    fs.writeFile(fileLocation , data, function(error){
+            	     if(error) { console.log("Error writing File  "+ data + "*****" + error );}
+            	     else {
+                      res.send("Successfully saved the file @ "+requestFile.content.files.uploadPath);}
+                 });
+            }});
+        } 	
+    }); 
+ });
 
 app.listen(8080);
