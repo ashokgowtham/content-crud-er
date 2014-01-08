@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main Page</title>
+</head>
+<body>
+
+	<div class='container'>
+		<div class='row'>
+			<div class='col-md-12'>
+				<%include menu.ejs %>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-md-4'>
+				Categories come here.			
+			</div>
+			<div class='col-md-8'>
+				Main Page Contents come here.	
+			</div>
+			
+		</div>
+	</div> 	
+
+</body>
+<link rel="stylesheet" href="/stylesheet/index.css">
+<link rel="stylesheet" href="/stylesheet/bootstrap.css">
+<script type="text/javascript" src="/javascript/index.js"></script>
+<script type="text/javascript" src="/javascript/jquery.js"></script>
+<script type="text/javascript">
+	$(function() {
+		categories.fetchCategories();		
+	});
+</script>
+</html>
